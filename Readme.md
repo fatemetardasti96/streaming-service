@@ -43,7 +43,9 @@ The infrastructure directory includes Terraform IaC to initialize all services i
 
 `
 cd infrastructure
+
 terraform init
+
 terraform apply
 `
 
@@ -51,6 +53,7 @@ generate_events cerates 1M events per hour and sends them to Kinesis Data Sream.
 
 `
 cd ../src
+
 python generate_events.py
 `
 The docker file needs to be deployed to the ecr which is then used to transform the events automatically.
