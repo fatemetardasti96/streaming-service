@@ -1,4 +1,4 @@
-We want to design system that ingests events and performs processing and stores the results in S3 for future use. 
+We want to design a system that ingests events and performs processing and stores the results in S3 for future use. 
 First of all we want to ingest the events, the volume of generated events is quite large with 1M events per hour or around 300 events per second and we should not miss any event and need to ingest them in real time. 
 
 we cannot directly send events to the end data storage because of multiple reasons: 
@@ -36,3 +36,23 @@ As we would like to store the events in a data lake for further analytical purpo
 
 
 
+# How to
+
+The infrastructure directory includes Terraform IaC to initialize all services in S3 as described in the upper image. 
+
+
+`
+cd infrastructure
+terraform init
+terraform apply
+`
+
+generate_events cerates 1M events per hour and sends them to Kinesis Data Sream.
+
+`
+cd ../src
+python generate_events.py
+`
+The docker file needs to be deployed to the ecr which is then used to transform the events automatically.
+
+A batch job runs every night at 12 AM to load data from the short storage to the analytical storage for the passed day.

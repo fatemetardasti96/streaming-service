@@ -53,8 +53,9 @@ def generate_mock_data():
     # df.to_json("events_1000000.json", orient='records', lines=True)
 
 if __name__ == "__main__":
-    # events_per_hour = 1000000
-    # sleep_time = 3600 / events_per_hour
-    # while True:
-    #     send_events_to_kinesis(events_per_hour, sleep_time)
-    generate_mock_data()
+    events_per_hour = 1000000
+    sleep_time = 3600 / events_per_hour
+    while True:
+        send_events_to_kinesis(events_per_hour, sleep_time)
+    
+    # generate_mock_data()
