@@ -9,12 +9,16 @@ we cannot directly send events to the end data storage because of multiple reaso
 - we should not need to waite for a response which adds latency 
 - The number of events can go up or down in different time slots and we have to scale the system accordingly
 
-So instead of sending events directly to the system we send them to a streaming platform: in this case Kinesis Data Stream. Kinesis Data Stream can scale easily with more number of shards and can handle a very high scale. Each shard can support writes up to 1,000 records per second, up to a maximum data write total of 1 MiB per second.
+So instead of sending events directly to the end storage, we send them to a streaming platform: in this case Kinesis Data Stream. Kinesis Data Stream can scale easily with more number of shards and can handle a very high scale. Each shard can support writes up to 1,000 records per second, up to a maximum data write total of 1 MiB per second.
 
+Kinesis supports "On-demand" and "Provisioned" capacity and with on-demnand it can automatically scale up and down. Therefore if we have varying amont of events over time it is better to use this capacity. With Provisioned capacity we haev to define the number of Kinesis shards when we create the Kinesis Data Stream instance. It allows for better cost control and scaling only is possible manually.
+Events are stored in the Kinesis shards and there is no limitation in receiving events. Retention period (by default being 24h) is the time length that events are accessible in shards and need to be consumed. Therefore we use Firehose to send data to the end destination. Firehose can also apply transformations before storing the event in the destination. Lambda gets triggered when a new event is recieved by the Firehose to transform the event. We can use the transformation to convert the data stream into formats such as Parquet as well.
 
-We then use Firehose to get the data from data stream and transform and deliver within seconds to the temporary storage which is then stored in the analytical data lake via a batch job.
+DynamoDB is a serverless, NoSQL, fully managed database service with single-digit millisecond response times at any scale, that can be used as a store event uuids to check for duplicates.
 
-![alt text](image-2.png)
+S3 is the destination where the ingested data will be stored and it can work as a data lake.
+
+![alt text](image.png)
 
 # Design Questions
 
